@@ -31,17 +31,17 @@ router.all('/upload',function (req, res, next) {
             file.pipe(fstream);
             fstream.on('close', function () {    
                 console.log("Upload Finished of " + filename);     
-				child = exec('python face_detect.py routes/unface.jpg haarcascade_frontalface_default.xml',
+				child = exec('python home/git/Senior-Design/Authentication/face_detect.py home/git/Senior-Design/Authentication/routes/unface.jpg home/git/Senior-Design/Authentication/haarcascade_frontalface_default.xml',
 					function (error, stdout, stderr) {
 					console.log('stdout: ' + stdout);
 					console.log('stderr: ' + stderr);
 					
 					res.redirect('/send');
-					
+				
 					if (error !== null) {
 						console.log('exec error: ' + error);
 					}});
-				
+			
             });
 			
         });

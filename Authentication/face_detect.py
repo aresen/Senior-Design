@@ -53,5 +53,5 @@ print "The minimum number of faces is {0}!".format(len(faces))
 for (x, y, w, h) in faces:
     cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-cv2.imwrite("routes/face.jpg",image)
+cv2.imwrite("home/git/Senior-Design/Authentication/routes/face.jpg",image)
 cv2.waitKey(0)
