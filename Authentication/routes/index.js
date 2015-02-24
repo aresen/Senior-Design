@@ -4,6 +4,9 @@ var router = express.Router();
 var passport = require('passport');
 var sys = require("sys");
 var shelljs = require("shelljs/global");
+var exec = require('child_process').exec,
+    child;
+
 router.use(express.static(__dirname + '/public'));
 module.exports = router;
 router.use(passport.initialize());
@@ -28,8 +31,17 @@ router.all('/upload',function (req, res, next) {
             file.pipe(fstream);
             fstream.on('close', function () {    
                 console.log("Upload Finished of " + filename);     
-				faceDetect(filename);
-				res.redirect('/send');
+				child = exec('python face_detect.py routes/unface.jpg haarcascade_frontalface_default.xml',
+					function (error, stdout, stderr) {
+					console.log('stdout: ' + stdout);
+					console.log('stderr: ' + stderr);
+					
+					res.redirect('/send');
+					
+					if (error !== null) {
+						console.log('exec error: ' + error);
+					}});
+				
             });
 			
         });
