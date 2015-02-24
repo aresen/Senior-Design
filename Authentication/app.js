@@ -72,12 +72,6 @@ passport.deserializeUser(function(user, callback){
        console.log('deserialize user.');
        callback(null, user.id);
     });
-	
-	
-	
-
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -117,25 +111,3 @@ var server = app.listen(8080, function () {
   console.log('Application listening at http://%s:%s', host, port)
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
