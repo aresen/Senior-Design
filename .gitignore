@@ -14,7 +14,7 @@ results
 node_modules
 npm-debug.log
 
-profile.json 
+Authentication/profile.json 
 
 Authentication/config/vars.json
 Authentication/SQL
