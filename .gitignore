@@ -14,4 +14,4 @@ results
 node_modules
 npm-debug.log
 
-config/vars.json
+Authentication/config/vars.json
