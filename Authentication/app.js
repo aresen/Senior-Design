@@ -11,7 +11,7 @@ var logger = require('morgan');
 var LocalStrategy = require('passport-local');
 var TwitterStrategy = require('passport-twitter');
 var FacebookStrategy = require('passport-facebook');
-var expressHbs = require('express3-handlebars');
+var expressHbs = require('express-handlebars');
 var logger = require('morgan');
 var busboy = require('connect-busboy');
 var methodOverride = require('method-override');
@@ -21,6 +21,7 @@ var shelljs = require("shelljs/global");
 var sys = require("sys");
 var googleStrategy = require('passport-google-oauth').OAuth2Strategy; //Authentication
 
+var strings = require('./config/vars.json');
 
 //App configuration settings
 var app = express();
@@ -40,17 +41,15 @@ var app = express();
 	app.engine('hbs', expressHbs({extname:'hbs', defaultLayout:'main.hbs'}));
 	app.set('view engine', 'hbs');
 
-
-//Google Project Credentials	
+//Google Project Credentials  
 passport.use(new googleStrategy({
-    clientID: '1071634343206-k1udbc79djnhv5rl6vfl9d08onck216p.apps.googleusercontent.com',
-    clientSecret: 'evjtyrb_bMix7OXsTaI1AqPh',
-    callbackURL: "http://identiglass.quentinl.com:8080/auth/google/callback"
-	
+    clientID: strings.google.clientID,
+    clientSecret: strings.google.clientSecret,
+    callbackURL: strings.google.callbackURL
+  
 },
-    
-function (accessToken, refreshToken, profile, done) {
 
+function (accessToken, refreshToken, profile, done) {
 
     fs.writeFile(__dirname + "/profile.json", JSON.stringify(profile, null, 4), function(err) {
     if(err) {
