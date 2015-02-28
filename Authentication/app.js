@@ -8,7 +8,10 @@ var session = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var logger = require('morgan');
+<<<<<<< Updated upstream
 var FacebookStrategy = require('passport-facebook');
+=======
+>>>>>>> Stashed changes
 var expressHbs = require('express-handlebars');
 var logger = require('morgan');
 var busboy = require('connect-busboy');
@@ -17,9 +20,10 @@ var passport = require('passport');
 var fs = require('fs');
 var shelljs = require("shelljs/global");
 var sys = require("sys");
-var googleStrategy = require('passport-google-oauth').OAuth2Strategy; //Authentication
 
-var strings = require('./config/vars.json');
+var auth = require('./auth/google');
+
+var strings = require('./config/vars');
 
 //App configuration settings
 var app = express();
@@ -38,37 +42,6 @@ var app = express();
 	app.use(methodOverride('X-HTTP-Method-Override'));
 	app.engine('hbs', expressHbs({extname:'hbs', defaultLayout:'main.hbs'}));
 	app.set('view engine', 'hbs');
-
-//Google Project Credentials  
-passport.use(new googleStrategy({
-    clientID: strings.google.clientID,
-    clientSecret: strings.google.clientSecret,
-    callbackURL: strings.google.callbackURL
-  
-},
-
-function (accessToken, refreshToken, profile, done) {
-
-    fs.writeFile(__dirname + "/profile.json", JSON.stringify(profile, null, 4), function(err) {
-    if(err) {
-        console.log(err);
-    } else {
-        console.log("profile.json was saved!");
-    }
-});  //profile contains all the personal data returned 
-    done(null, profile)
-}
-));
-
-passport.serializeUser(function(user, callback){
-        console.log('serializing user.');
-        callback(null, user.id);
-    });
-
-passport.deserializeUser(function(user, callback){
-       console.log('deserialize user.');
-       callback(null, user.id);
-    });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
