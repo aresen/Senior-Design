@@ -7,7 +7,6 @@ passport.use(new googleStrategy({
     clientID: strings.google.clientID,
     clientSecret: strings.google.clientSecret,
     callbackURL: strings.google.callbackURL
-  
 },
 
 function (accessToken, refreshToken, profile, done) {
