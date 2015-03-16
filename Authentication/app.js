@@ -9,7 +9,6 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var logger = require('morgan');
 var LocalStrategy = require('passport-local');
-var TwitterStrategy = require('passport-twitter');
 var FacebookStrategy = require('passport-facebook');
 var expressHbs = require('express-handlebars');
 var logger = require('morgan');
@@ -83,6 +82,10 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
+
+app.get('/', function(req, res){
+  res.render('index');
+});
 
 app.use(function(req, res, next){
   var err = req.session.error,

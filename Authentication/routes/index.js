@@ -15,8 +15,18 @@ router.use(passport.session());
 
 //===============ROUTES=================
 //displays our homepage
-router.get('/', function(req, res){
-  res.redirect('/index.html');
+// router.get('/', function(req, res){
+//   res.redirect('/index.html');
+// });
+
+router.get('/', function(request, response) {
+    response.render('index', {
+    	title: "Identiglass for Boston University"
+    });
+});
+
+router.get('/uploads', function(request, response) {
+	response.render('uploads');
 });
 
 router.all('/upload',function (req, res, next) {
@@ -31,7 +41,7 @@ router.all('/upload',function (req, res, next) {
             file.pipe(fstream);
             fstream.on('close', function () {    
                 console.log("Upload Finished of " + filename);     
-				child = exec('python home/git/Senior-Design/Authentication/face_detect.py home/git/Senior-Design/Authentication/routes/unface.jpg home/git/Senior-Design/Authentication/haarcascade_frontalface_default.xml',
+				child = exec('python face_detect.py home/git/Senior-Design/Authentication/routes/unface.jpg home/git/Senior-Design/Authentication/haarcascade_frontalface_default.xml',
 					function (error, stdout, stderr) {
 					console.log('stdout: ' + stdout);
 					console.log('stderr: ' + stderr);
@@ -75,7 +85,8 @@ router.get('/signin', function(req, res){
   res.render('signin');
 });
 
-router.get('/auth/google', passport.authenticate('google',{scope: 'https://www.googleapis.com/auth/plus.me https://www.google.com/m8/feeds https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'}));
+router.get('/auth/google', passport.authenticate('google',{scope: 
+	'https://www.googleapis.com/auth/plus.me https://www.google.com/m8/feeds https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'}));
 
 router.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/signin' }),
@@ -99,15 +110,6 @@ router.get('/logout', function (req, res) {
         res.redirect('/');
     });
 	
-	
-
-//sends the request through our local signup strategy, and if successful takes user to homepage, otherwise returns then to signin page
-router.post('/local-reg', passport.authenticate('local-signup', {
-  successRedirect: '/',
-  failureRedirect: '/signin'
-  })
-);
-
 //sends the request through our local login/signin strategy, and if successful takes user to homepage, otherwise returns then to signin page
 router.post('/login', passport.authenticate('local-signin', { 
   successRedirect: '/',
