@@ -6,6 +6,11 @@ var sys = require("sys");
 var shelljs = require("shelljs/global");
 var exec = require('child_process').exec,
     child;
+var pg = require('pg');
+var strings = require('../config/vars.json');
+
+//DB connection
+var client = new pg.Client(strings.db.connString);
 
 router.use(express.static(__dirname + '/public'));
 module.exports = router;
@@ -20,6 +25,24 @@ router.use(passport.session());
 // });
 
 router.get('/', function(request, response) {
+	var results = [];
+
+	pg.connect(strings.db.connString, function(err, client, done) {
+		var query = client.query("SELECT * FROM dbo.users ORDER BY ID ASC");
+		query.on('row', function(row) {
+            results.push(row);
+        });
+        // After all data is returned, close connection and return results
+        query.on('end', function() {
+            client.end();
+            //response.json(results);
+        });
+
+        // Handle Errors
+        if(err) {
+          console.log(err);
+        }
+	});
     response.render('index', {
     	title: "Identiglass for Boston University"
     });
@@ -108,6 +131,7 @@ function faceDetect(fileName,res) {
 router.get('/logout', function (req, res) {
         req.logOut();
         res.redirect('/');
+        req.session.notice = "You have successfully been logged out " + name + "!";
     });
 	
 //sends the request through our local login/signin strategy, and if successful takes user to homepage, otherwise returns then to signin page

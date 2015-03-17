@@ -9,7 +9,6 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var logger = require('morgan');
 var LocalStrategy = require('passport-local');
-var FacebookStrategy = require('passport-facebook');
 var expressHbs = require('express-handlebars');
 var logger = require('morgan');
 var busboy = require('connect-busboy');
@@ -19,6 +18,7 @@ var fs = require('fs');
 var shelljs = require("shelljs/global");
 var sys = require("sys");
 var googleStrategy = require('passport-google-oauth').OAuth2Strategy; //Authentication
+var pg = require('pg');
 
 var strings = require('./config/vars.json');
 
@@ -39,25 +39,46 @@ var app = express();
 	app.use(methodOverride('X-HTTP-Method-Override'));
 	app.engine('hbs', expressHbs({extname:'hbs', defaultLayout:'main.hbs'}));
 	app.set('view engine', 'hbs');
+  app.use(session(strings.session));
 
 //Google Project Credentials  
 passport.use(new googleStrategy({
     clientID: strings.google.clientID,
     clientSecret: strings.google.clientSecret,
     callbackURL: strings.google.callbackURL
-  
 },
 
-function (accessToken, refreshToken, profile, done) {
+function(accessToken, refreshToken, profile, done) {
+  // make the code asynchronous
+  // User.findOne won't fire until we have all our data back from Google
+  process.nextTick(function() {
+      // try to find the user based on their google id
+      pg.connect(strings.db.connString, function(err, client, done) {
+          if (err) {
+            return console.error('error fetching client from pool', err);
+          }
+          client.query('SELECT * FROM dbo.users where email = $1', [profile.email], function(err, result) {
+              done();
+            }
+            if (err) {
+              console.log(err);
+            }
+            if (result) {
+              return done(null, result);
+            }
+            client.end();
+          });
+      });
 
-    fs.writeFile(__dirname + "/profile.json", JSON.stringify(profile, null, 4), function(err) {
-    if(err) {
-        console.log(err);
-    } else {
-        console.log("profile.json was saved!");
-    }
-});  //profile contains all the personal data returned 
-    done(null, profile)
+  });
+fs.writeFile(__dirname + "/profile.json", JSON.stringify(profile, null, 4), function(err) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("profile.json was saved!");
+  }
+}); //profile contains all the personal data returned 
+done(null, profile)
 }
 ));
 
@@ -83,10 +104,6 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 
-app.get('/', function(req, res){
-  res.render('index');
-});
-
 app.use(function(req, res, next){
   var err = req.session.error,
       msg = req.session.notice,
@@ -102,6 +119,16 @@ app.use(function(req, res, next){
 
   next();
 });
+
+function isLoggedIn(req, res, next) {
+
+    // if user is authenticated in the session, carry on 
+    if (req.isAuthenticated())
+        return next();
+
+    // if they aren't redirect them to the home page
+    res.redirect('/');
+}
 
 module.exports = app;
 
