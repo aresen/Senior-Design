@@ -58,7 +58,6 @@ function(accessToken, refreshToken, profile, done) {
           }
           client.query('SELECT * FROM dbo.users where email = $1', [profile.email], function(err, result) {
               done();
-            }
             if (err) {
               console.log(err);
             }
