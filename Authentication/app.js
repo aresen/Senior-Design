@@ -8,7 +8,6 @@ var session = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var logger = require('morgan');
-var LocalStrategy = require('passport-local');
 var expressHbs = require('express-handlebars');
 var logger = require('morgan');
 var busboy = require('connect-busboy');
