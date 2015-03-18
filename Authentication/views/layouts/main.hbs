@@ -39,12 +39,18 @@
               {{#if user}}
                 <p class="navbar-text">
                   <strong>Hi,</strong> 
+                  <!--
                   <img src="{{user.avatar}}" width="20" height="20"> 
-                  {{user.username}}
+                  -->
+                  {{ user.givenname}}
+                  {{user.familyname}}                 
                 </p>
                 </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                  <li>
+                    <a href="/">Home</a>
+                  </li>
                   <li>
                     <a href="/uploads">Upload Image</a>
                   </li>

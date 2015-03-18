@@ -9,8 +9,8 @@ var exec = require('child_process').exec,
 var pg = require('pg');
 var strings = require('../config/vars.json');
 
-//DB connection
-var client = new pg.Client(strings.db.connString);
+//models
+var models = require('../models');
 
 router.use(express.static(__dirname + '/public'));
 module.exports = router;
@@ -19,37 +19,18 @@ router.use(passport.session());
 
 
 //===============ROUTES=================
-//displays our homepage
-// router.get('/', function(req, res){
-//   res.redirect('/index.html');
-// });
 
-router.get('/', function(request, response) {
-	var results = [];
-
-	pg.connect(strings.db.connString, function(err, client, done) {
-		var query = client.query("SELECT * FROM dbo.users ORDER BY ID ASC");
-		query.on('row', function(row) {
-            results.push(row);
-        });
-        // After all data is returned, close connection and return results
-        query.on('end', function() {
-            client.end();
-            //response.json(results);
-        });
-
-        // Handle Errors
-        if(err) {
-          console.log(err);
-        }
-	});
-    response.render('index', {
-    	title: "Identiglass for Boston University"
+router.get('/', function(req, res) {
+    res.render('index', {
+        title: "Identiglass for Boston University", 
+        user: req.user
     });
 });
 
 router.get('/uploads', function(request, response) {
-	response.render('uploads');
+	response.render('uploads', {
+        user: request.user
+    });
 });
 
 router.all('/upload',function (req, res, next) {
@@ -64,7 +45,7 @@ router.all('/upload',function (req, res, next) {
             file.pipe(fstream);
             fstream.on('close', function () {    
                 console.log("Upload Finished of " + filename);     
-				child = exec('python face_detect.py home/git/Senior-Design/Authentication/routes/unface.jpg home/git/Senior-Design/Authentication/haarcascade_frontalface_default.xml',
+				child = exec('python face_detect.py routes/face.jpg haarcascade_frontalface_default.xml',
 					function (error, stdout, stderr) {
 					console.log('stdout: ' + stdout);
 					console.log('stderr: ' + stderr);
@@ -83,8 +64,7 @@ router.all('/upload',function (req, res, next) {
 	
 router.all('/send',function (req, res, next) {
 
-	res.sendFile(__dirname + '/' + 'face.jpg');
-	
+	res.sendFile(__dirname + '/' + 'unface.jpg');
 	});
 
 	
@@ -112,35 +92,19 @@ router.get('/auth/google', passport.authenticate('google',{scope:
 	'https://www.googleapis.com/auth/plus.me https://www.google.com/m8/feeds https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'}));
 
 router.get('/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/signin' }),
-  function(req, res, next) {
-    // Successful authentication, redirect home.
-
-	res.redirect('/index.html');
-
-  });
- 
+  passport.authenticate('google', { 
+      failureRedirect: '/signin' 
+  }),
+  function(req,res) {
+      res.redirect('/');
+});
 function faceDetect(fileName,res) {
 
 	sys.debug(fileName);
 	exec('python face_detect.py routes/' + fileName + ' haarcascade_frontalface_default.xml');	
 
-	}
-   
+	};
   
-router.get('/logout', function (req, res) {
-        req.logOut();
-        res.redirect('/');
-        req.session.notice = "You have successfully been logged out " + name + "!";
-    });
-	
-//sends the request through our local login/signin strategy, and if successful takes user to homepage, otherwise returns then to signin page
-router.post('/login', passport.authenticate('local-signin', { 
-  successRedirect: '/',
-  failureRedirect: '/signin'
-  })
-);
-
 //logs user out of site, deleting them from the session, and returns to homepage
 router.get('/logout', function(req, res){
   var name = req.user.username;
@@ -150,3 +114,12 @@ router.get('/logout', function(req, res){
   req.session.notice = "You have successfully been logged out " + name + "!";
 });
 	
+function isLoggedIn(req, res, next) {
+
+    // if user is authenticated in the session, carry on 
+    if (req.isAuthenticated())
+        return next();
+
+    // if they aren't redirect them to the home page
+    res.redirect('/');
+};

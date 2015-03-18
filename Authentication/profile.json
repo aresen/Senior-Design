@@ -1,27 +1,25 @@
 {
     "provider": "google",
-    "id": "107706806025266848454",
-    "displayName": "William Vangos",
+    "id": "112431757031074563399",
+    "displayName": "Quentin Li",
     "name": {
-        "familyName": "Vangos",
-        "givenName": "William"
+        "familyName": "Li",
+        "givenName": "Quentin"
     },
     "emails": [
         {
-            "value": "bvangos@bu.edu"
+            "value": "quentinl@bu.edu"
         }
     ],
-    "_raw": "{\n \"id\": \"107706806025266848454\",\n \"email\": \"bvangos@bu.edu\",\n \"verified_email\": true,\n \"name\": \"William Vangos\",\n \"given_name\": \"William\",\n \"family_name\": \"Vangos\",\n \"link\": \"https://plus.google.com/107706806025266848454\",\n \"picture\": \"https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg\",\n \"gender\": \"male\",\n \"locale\": \"en\",\n \"hd\": \"bu.edu\"\n}\n",
+    "_raw": "{\n \"id\": \"112431757031074563399\",\n \"email\": \"quentinl@bu.edu\",\n \"verified_email\": true,\n \"name\": \"Quentin Li\",\n \"given_name\": \"Quentin\",\n \"family_name\": \"Li\",\n \"picture\": \"https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg\",\n \"locale\": \"en\",\n \"hd\": \"bu.edu\"\n}\n",
     "_json": {
-        "id": "107706806025266848454",
-        "email": "bvangos@bu.edu",
+        "id": "112431757031074563399",
+        "email": "quentinl@bu.edu",
         "verified_email": true,
-        "name": "William Vangos",
-        "given_name": "William",
-        "family_name": "Vangos",
-        "link": "https://plus.google.com/107706806025266848454",
+        "name": "Quentin Li",
+        "given_name": "Quentin",
+        "family_name": "Li",
         "picture": "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg",
-        "gender": "male",
         "locale": "en",
         "hd": "bu.edu"
     }
