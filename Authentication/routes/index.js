@@ -12,7 +12,6 @@ var strings = require('../config/vars.json');
 //models
 var models = require('../models');
 
-router.use(express.static(__dirname + '/public'));
 module.exports = router;
 router.use(passport.initialize());
 router.use(passport.session());

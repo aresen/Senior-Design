@@ -36,7 +36,7 @@ sequelize
             console.log("Connection has been established successfully")
         }
     })
-//App configuration settings
+
 var app = express();
 	app.set('views', __dirname + '//views');
 	app.use(busboy());
