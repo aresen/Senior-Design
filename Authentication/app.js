@@ -36,7 +36,6 @@ sequelize
             console.log("Connection has been established successfully")
         }
     })
-
 //App configuration settings
 var app = express();
 	app.set('views', __dirname + '//views');
@@ -75,6 +74,14 @@ function(accessToken, refreshToken, profile, done) {
       models.User.find({where: {'email': profile.emails[0].value}}).then(function(user) {
           if (user) {
               console.log("login success!!");
+              if (!user.name) {
+                  user.updateAttributes({
+                      'familyname': profile.name.familyName,
+                      'givenname': profile.name.givenName,
+              }).then(function() { 
+                  console.log("updated");
+              });
+              }
               console.log(user.email);
               return done(null,user);
           } else if (!user) {
@@ -82,10 +89,11 @@ function(accessToken, refreshToken, profile, done) {
                   'familyname': profile.name.familyName,
                   'givenname': profile.name.givenName,
                   'email': profile.emails[0].value
-              })
+              }).then(function(user) {
+                  return done(null,user);
+              });
           }
-      });
-
+      })
   });
 }
 ));
@@ -97,9 +105,9 @@ passport.serializeUser(function(user, done){
 
 passport.deserializeUser(function(user, done){
        console.log('deserialize user.');
-       models.User.find({where: {id: user.id}}).then(function(user) {
+//       models.User.find({where: {id: user.id}}).then(function(user) {
            done(null, user);
-       });
+//       });
     });
 
 // catch 404 and forward to error handler

@@ -9,5 +9,8 @@ module.exports = function(sequelize, Datatypes) {
             unique: true,
             allowNull: false
         }
+    },
+    {
+        timestamps: false
     })
 };

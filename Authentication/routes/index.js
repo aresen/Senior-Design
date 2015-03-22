@@ -85,7 +85,11 @@ function showImage(req,res) {
 		
 //displays our signup page
 router.get('/signin', function(req, res){
-  res.render('signin');
+    if (req.user) {
+        res.redirect('/');
+    } else {
+        res.render('signin');
+    }
 });
 
 router.get('/auth/google', passport.authenticate('google',{scope: 
