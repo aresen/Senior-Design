@@ -45,7 +45,7 @@ router.all('/upload',function (req, res, next) {
             file.pipe(fstream);
             fstream.on('close', function () {    
                 console.log("Upload Finished of " + filename);     
-				child = exec('python face_detect.py routes/face.jpg haarcascade_frontalface_default.xml',
+				child = exec('python face_detect.py routes/unface.jpg haarcascade_frontalface_default.xml',
 					function (error, stdout, stderr) {
 					console.log('stdout: ' + stdout);
 					console.log('stderr: ' + stderr);
@@ -64,7 +64,7 @@ router.all('/upload',function (req, res, next) {
 	
 router.all('/send',function (req, res, next) {
 
-	res.sendFile(__dirname + '/' + 'unface.jpg');
+	res.sendFile(__dirname + '/' + 'face.jpg');
 	});
 
 	
