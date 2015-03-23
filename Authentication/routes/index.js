@@ -15,6 +15,7 @@ var models = require('../models');
 module.exports = router;
 router.use(passport.initialize());
 router.use(passport.session());
+router.use(require('./api'));
 
 
 //===============ROUTES=================
@@ -116,13 +117,11 @@ router.get('/logout', function(req, res){
   res.redirect('/');
   req.session.notice = "You have successfully been logged out " + name + "!";
 });
-	
-function isLoggedIn(req, res, next) {
 
-    // if user is authenticated in the session, carry on 
-    if (req.isAuthenticated())
-        return next();
-
-    // if they aren't redirect them to the home page
-    res.redirect('/');
-};
+router.get('/admin', function(req, res) {
+    if (!req.user) {
+        res.redirect('/');
+    } else {
+        res.render('admin', {user: req.user});
+    }
+});
