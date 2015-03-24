@@ -36,7 +36,9 @@
     "shelljs": "^0.3.0",
     "url-template": "^2.0.4",
     "sequelize": "~2.0.4",
-    "cookie-session": "~1.1.0"
+    "cookie-session": "~1.1.0",
+    "redis": "~0.12.1",
+    "connect-redis": "~2.2.0"
   },
   "devDependencies": {},
   "scripts": {

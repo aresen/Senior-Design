@@ -18,6 +18,8 @@ var sys = require("sys");
 var googleStrategy = require('passport-google-oauth').OAuth2Strategy; //Authentication
 var pg = require('pg');
 var strings = require('./config/vars.json');
+var RedisStore = require('connect-redis')(session);
+var redis = require("redis").createClient();
 
 var models = require('./models');
 var Sequelize = require('sequelize')
@@ -52,7 +54,8 @@ var app = express();
     app.use(session({
         secret: strings.session,
         resave: false,
-        saveUninitialized: true
+        saveUninitialized: true,
+        store: new RedisStore({host: 'localhost', port: 6379, client: redis})
     }));
 	app.use(passport.initialize());
 	app.use(passport.session());
@@ -82,7 +85,7 @@ function(accessToken, refreshToken, profile, done) {
               }
               console.log(user.email);
               return done(null,user);
-          } else if (!user) {
+          } else if (!user && profile.email[0] == 'pisano@bu.edu') {
               models.User.create({
                   'familyname': profile.name.familyName,
                   'givenname': profile.name.givenName,
