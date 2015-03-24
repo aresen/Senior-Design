@@ -15,4 +15,4 @@ node_modules
 npm-debug.log
 
 Authentication/config/vars.json
-routes/*.jpg
+Authentication/routes/*.jpg
