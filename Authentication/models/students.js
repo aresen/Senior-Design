@@ -7,8 +7,7 @@ module.exports = function(sequelize, Datatypes) {
         email: {
             type: Datatypes.STRING,
             unique: true
-        },
-        image: { type: Datatypes.STRING}
+        }
     },{
         classMethods: {
             assocate: function(models) {
