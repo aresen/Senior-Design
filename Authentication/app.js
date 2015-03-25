@@ -60,7 +60,7 @@ var app = express();
 	app.use(passport.initialize());
 	app.use(passport.session());
 	app.use('/', routes);
-
+    
 //Google Project Credentials  
 passport.use(new googleStrategy({
     clientID: strings.google.clientID,
@@ -75,17 +75,14 @@ function(accessToken, refreshToken, profile, done) {
       models.User.find({where: {'email': profile.emails[0].value}}).then(function(user) {
           if (user) {
               console.log("login success!!");
-              if (!user.name) {
+              if (!user.fullname) {
                   user.updateAttributes({
                       'familyname': profile.name.familyName,
-                      'givenname': profile.name.givenName,
-              }).then(function() { 
-                  console.log("updated");
-              });
+                      'givenname': profile.name.givenName
+                  })
               }
-              console.log(user.email);
-              return done(null,user);
-          } else if (!user && profile.email[0] == 'pisano@bu.edu') {
+              return done(null, user);
+          } else if (!user && profile.emails[0].value == 'pisano@bu.edu') {
               models.User.create({
                   'familyname': profile.name.familyName,
                   'givenname': profile.name.givenName,
@@ -93,11 +90,12 @@ function(accessToken, refreshToken, profile, done) {
               }).then(function(user) {
                   return done(null,user);
               });
+          } else {
+              return done(null, false);
           }
-      })
+      });
   });
-}
-));
+}));
 
 passport.serializeUser(function(user, done){
         console.log('serializing user.');
@@ -106,9 +104,7 @@ passport.serializeUser(function(user, done){
 
 passport.deserializeUser(function(user, done){
        console.log('deserialize user.');
-//       models.User.find({where: {id: user.id}}).then(function(user) {
-           done(null, user);
-//       });
+       done(null, user);
     });
 
 // catch 404 and forward to error handler
