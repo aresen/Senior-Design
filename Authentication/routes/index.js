@@ -32,41 +32,51 @@ router.get('/uploads', function(request, response) {
         user: request.user
     });
 });
-
-router.all('/upload',function (req, res, next) {
-		
-        var fstream;
-        req.pipe(req.busboy);
-        req.busboy.on('file', function (fieldname, file, filename) {
-            console.log("Uploading: " + filename);
-			filename='unface.jpg';
+router.all('/upload',function (req, res, next) { var fstream; req.pipe(req.busboy); req.busboy.on('file', function (fieldname, file, filename) { console.log("Uploading: " + filename); filename='unface.jpg';
             //Path where image will be uploaded
             fstream = fs.createWriteStream(__dirname + '/' + filename,{encoding: 'binary'});
             file.pipe(fstream);
             fstream.on('close', function () {    
                 console.log("Upload Finished of " + filename);     
-				child = exec('python face_detect.py routes/unface.jpg haarcascade_frontalface_default.xml',
+				child = exec('python main.py routes/unface.jpg Testing_Images/',
 					function (error, stdout, stderr) {
 					console.log('stdout: ' + stdout);
 					console.log('stderr: ' + stderr);
 					
 					res.redirect('/send');
-				
+		
 					if (error !== null) {
 						console.log('exec error: ' + error);
 					}});
 			
             });
-			
         });
     });
 
 	
 router.all('/send',function (req, res, next) {
 
-	res.sendFile(__dirname + '/' + 'face.jpg');
-	});
+	//res.sendFile(__dirname + '/results.html');
 
+    res.json({name: "Alan Pisano", picture: null, message: "success"}); 
+}); 
+
+// function to encode file data to base64 encoded string
+function base64_encode(file) {
+    // read binary data
+    var bitmap = fs.readFileSync(file);
+    // convert binary data to base64 encoded string
+    return new Buffer(bitmap).toString('base64');
+}
+
+// function to create file from base64 encoded string
+function base64_decode(base64str, file) {
+// create buffer object from base64 encoded string, it is important to tell the constructor that the string is base64 encoded
+    var bitmap = new Buffer(base64str, 'base64');
+    // write buffer to file
+    fs.writeFileSync(file, bitmap);
+    console.log('******** File created from base64 encoded string ********');
+}
 	
 
 function showImage(req,res) {
@@ -102,12 +112,7 @@ router.get('/auth/google/callback',
   function(req,res) {
       res.redirect('/');
 });
-function faceDetect(fileName,res) {
 
-	sys.debug(fileName);
-	exec('python face_detect.py routes/' + fileName + ' haarcascade_frontalface_default.xml');	
-
-	};
   
 //logs user out of site, deleting them from the session, and returns to homepage
 router.get('/logout', function(req, res){
@@ -122,6 +127,9 @@ router.get('/admin', function(req, res) {
     if (!req.user) {
         res.redirect('/');
     } else {
-        res.render('admin', {user: req.user});
+        models.User.findAll().then(function(results) {
+            console.log(results);
+            res.render('admin', {user: req.user, authorized: results});
+        });
     }
 });

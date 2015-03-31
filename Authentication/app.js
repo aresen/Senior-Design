@@ -41,7 +41,7 @@ sequelize
 var app = express();
 	app.set('views', __dirname + '//views');
 	app.use(busboy());
-	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(express.static(__dirname+ '//public'));
 	app.use(favicon(__dirname + '/public/favicon.ico'));
 	app.use(logger('dev'));
 	app.use(cookieParser());
@@ -60,6 +60,7 @@ var app = express();
 	app.use(passport.initialize());
 	app.use(passport.session());
 	app.use('/', routes);
+    app.use(express.static(__dirname + 'public/js/'));
     
 //Google Project Credentials  
 passport.use(new googleStrategy({

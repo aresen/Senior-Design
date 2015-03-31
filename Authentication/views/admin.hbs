@@ -2,4 +2,62 @@
 
 <div class="jumbotron">
   <h2>Admin Page</h2>
+  <h3>Authorized Users</h3>
+  <div>
+  <table class="table">
+      <thead>
+          <th>id</th>
+          <th>Last Name</th>
+          <th>First Name</th>
+          <th>Email</th>
+      </thead>
+      <tbody>
+      {{#authorized}}
+          <tr>
+              <td>{{id}}</td>
+              <td>{{familyname}}</td>
+              <td>{{givenname}}</td>
+              <td>{{email}}</td>
+          </tr>
+      {{/authorized}}
+      </tbody>
+  </table>
+  </div>
+  
+  <div>
+      <form action="http://identiglass.quentinl.com:8080/api/users" method="post">
+          <div class="form-group">
+              <label>Add Email</label>
+              <input type="email" class="form-control" id="email" placeholder="Enter BU email">
+          </div>
+          <button type="submit" class="btn btn-default disabled" id="submit">Disabled</button>
+      </form>
+  </div>
+
 </div>
+
+<script>
+$(document).ready(function() {
+        console.log("loaded");
+    $('.delete').on('click', function() {
+        $.ajax({
+            type: 'DELETE',
+            async: true,
+            url: this,
+        });
+        location.reload();
+        $.preventDefault();
+    });
+    function addUser() {
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: document.getElementById('email').value,
+            });
+        alert("User Added");
+        }
+        $('#submit').submit(function(e) {
+            e.preventDefault();
+            });
+});
+</script>
