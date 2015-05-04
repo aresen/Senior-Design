@@ -3,5 +3,15 @@
         "clientID" : "",
         "clientSecret": "",
         "callbackURL": ""
-    }
+    },
+    "db": {
+        "name" : "",
+        "username" : "",
+        "password" : "",
+        "env" : {
+            "dialect" : "postgres",
+            "port": 5432
+        }
+    },
+    "session": ""
 }
