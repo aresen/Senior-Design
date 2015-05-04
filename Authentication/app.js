@@ -39,9 +39,9 @@ sequelize
     })
 
 var app = express();
-	app.set('views', __dirname + '//views');
+	app.set('views', (__dirname + '/views'));
 	app.use(busboy());
-	app.use(express.static(__dirname+ '//public'));
+	app.use(express.static(__dirname+ '/public'));
 	app.use(favicon(__dirname + '/public/favicon.ico'));
 	app.use(logger('dev'));
 	app.use(cookieParser());
@@ -68,6 +68,7 @@ passport.use(new googleStrategy({
     clientSecret: strings.google.clientSecret,
     callbackURL: strings.google.callbackURL
 },
+//Sequelize.sync();
 
 function(accessToken, refreshToken, profile, done) {
   // make the code asynchronous

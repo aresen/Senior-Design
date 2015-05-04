@@ -18,6 +18,11 @@
               <td>{{familyname}}</td>
               <td>{{givenname}}</td>
               <td>{{email}}</td>
+              <td>
+                  <form action='/api/users/{{id}}/del' method="POST">
+                      <button type="submit" class="btn-danger btn-xs">Delete</button>
+                  </form>
+              </td>
           </tr>
       {{/authorized}}
       </tbody>
@@ -25,39 +30,14 @@
   </div>
   
   <div>
-      <form action="http://identiglass.quentinl.com:8080/api/users" method="post">
+      <form action="http://identiglass.quentinl.com:8080/api/users" method="POST">
           <div class="form-group">
               <label>Add Email</label>
-              <input type="email" class="form-control" id="email" placeholder="Enter BU email">
+              <input type="email" class="form-control" name="email" id="email" placeholder="Enter BU email">
           </div>
-          <button type="submit" class="btn btn-default disabled" id="submit">Disabled</button>
+          <button type="submit" class="btn btn-primary btn-default" id="submit">Submit</button>
       </form>
   </div>
 
 </div>
 
-<script>
-$(document).ready(function() {
-        console.log("loaded");
-    $('.delete').on('click', function() {
-        $.ajax({
-            type: 'DELETE',
-            async: true,
-            url: this,
-        });
-        location.reload();
-        $.preventDefault();
-    });
-    function addUser() {
-        $.ajax({
-            type: 'POST',
-            async: true,
-            url: document.getElementById('email').value,
-            });
-        alert("User Added");
-        }
-        $('#submit').submit(function(e) {
-            e.preventDefault();
-            });
-});
-</script>

@@ -39,6 +39,7 @@ router.all('/upload',function (req, res, next) { var fstream; req.pipe(req.busbo
             fstream.on('close', function () {    
                 console.log("Upload Finished of " + filename);     
 				child = exec('python main.py routes/unface.jpg Testing_Images/',
+				//child = exec('python main.py routes/unface.jpg routes/test/',
 					function (error, stdout, stderr) {
 					console.log('stdout: ' + stdout);
 					console.log('stderr: ' + stderr);
@@ -58,7 +59,14 @@ router.all('/send',function (req, res, next) {
 
 	//res.sendFile(__dirname + '/results.html');
 
-    res.json({name: "Alan Pisano", picture: null, message: "success"}); 
+    var results = fs.readFileSync(__dirname + '/results.txt');
+    results = JSON.parse(results);
+    res.json({name: results.name, picture: null, message: "success", confidence: results.confidence}); 
+}); 
+
+router.all('/upimage',function (req, res, next) {
+
+	res.sendFile(__dirname + '/unface.jpg');
 }); 
 
 // function to encode file data to base64 encoded string
